@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 public class Doubled {
   public static void main(String[] args) {
-    List<String> linesToDecode =  getFileContent("duplicated-chars.txt");
+    List<String> linesToDecode = getFileContent("duplicated-chars.txt");
     List<String> decodedLines = linesToDecode.stream()
             .map(l -> decode(l))
             .collect(Collectors.toList());

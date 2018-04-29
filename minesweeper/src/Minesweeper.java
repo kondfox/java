@@ -22,8 +22,11 @@ public class Minesweeper {
   }
 
   private static void printMap(int[][] map) {
-    printHeader(map);
+    printMapHeader(map);
+    printMapBody(map);
+  }
 
+  private static void printMapBody(int[][] map) {
     for (int i = 0; i < map.length; i++) {
       System.out.print(ALPHABET.get(i) + "\t");
       for (int j = 0; j < map[i].length; j++) {
@@ -33,7 +36,7 @@ public class Minesweeper {
     }
   }
 
-  private static void printHeader(int[][] map) {
+  private static void printMapHeader(int[][] map) {
     System.out.print("\t");
     for (int i = 1; i <= map[0].length; i++) {
       System.out.print(i + " ");

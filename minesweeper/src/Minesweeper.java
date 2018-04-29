@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Minesweeper {
 
@@ -9,16 +6,42 @@ public class Minesweeper {
           "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"
   ));
   public static final int MINE = 9;
+  public static final int MAP_WIDTH = 10;
+  public static final int MAP_HEIGHT = 10;
+  public static final int MINE_COUNT = 10;
 
+  private static boolean[][] appearedMap = new boolean[MAP_HEIGHT][MAP_WIDTH];
+  private static boolean isGameOver = false;
+  private static int appearedFieldsCount = 0;
 
   public static void main(String[] args) {
 
-    int mapWidth = 10;
-    int mapHeight = 10;
-
-    int[][] map = createMap(mapWidth, mapHeight);
+    int[][] map = createMap(MAP_WIDTH, MAP_HEIGHT);
     printMap(map);
 
+    while (!isGameOver) {
+      int[] userInput = getUserInput();
+      appearField(userInput, appearedMap);
+      printMap(map);
+      checkGameState(map, userInput);
+    }
+    System.out.println("Game over");
+    System.exit(-1);
+  }
+
+  private static void appearField(int[] userInput, boolean[][] appearedMap) {
+    appearedMap[userInput[0]][userInput[1]] = true;
+    appearedFieldsCount++;
+  }
+
+  private static void checkGameState(int[][] map, int[] userInput) {
+    if (map[userInput[0]][userInput[1]] == MINE) {
+      isGameOver = true;
+    }
+    if (appearedFieldsCount == MAP_WIDTH * MAP_HEIGHT - MINE_COUNT) {
+      System.out.println("Congratulations, you Won!");
+      System.exit(1);
+    }
   }
 
   private static void printMap(int[][] map) {
@@ -30,7 +53,12 @@ public class Minesweeper {
     for (int i = 0; i < map.length; i++) {
       System.out.print(ALPHABET.get(i) + "\t");
       for (int j = 0; j < map[i].length; j++) {
-        System.out.print(map[i][j] + " ");
+        if (appearedMap[i][j]) {
+          System.out.print(map[i][j] + " ");
+        } else {
+          System.out.print("# ");
+        }
+
       }
       System.out.println();
     }
@@ -46,7 +74,7 @@ public class Minesweeper {
 
   private static int[][] createMap(int mapWidth, int mapHeight) {
     int[][] map = new int[mapHeight][mapWidth];
-    generateMines(map, 10);
+    generateMines(map, MINE_COUNT);
     calculateFieldValues(map);
     return map;
   }
@@ -111,4 +139,13 @@ public class Minesweeper {
     }
   }
 
+  public static int[] getUserInput() {
+    Scanner scanner = new Scanner(System.in);
+    System.out.print("Your coordinate (e.g. C3): ");
+    String userInput = scanner.nextLine();
+
+    int rowIndex = ALPHABET.indexOf(Character.toString(userInput.charAt(0)));
+    int columnIndex = Integer.parseInt(userInput.substring(1)) - 1;
+    return new int[]{ rowIndex, columnIndex };
+  }
 }

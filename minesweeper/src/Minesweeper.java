@@ -47,7 +47,53 @@ public class Minesweeper {
   private static int[][] createMap(int mapWidth, int mapHeight) {
     int[][] map = new int[mapHeight][mapWidth];
     generateMines(map, 10);
+    calculateFieldValues(map);
     return map;
+  }
+
+  private static void calculateFieldValues(int[][] map) {
+    for (int rowIndex = 0; rowIndex < map.length; rowIndex++) {
+      for (int columnIndex = 0; columnIndex < map[0].length; columnIndex++) {
+        if (map[rowIndex][columnIndex] == MINE) {
+          continue;
+        }
+        List<Integer[]> neighbours = getNeighbours(map, rowIndex, columnIndex);
+        int mineCount = countMines(map, neighbours);
+        map[rowIndex][columnIndex] = mineCount;
+      }
+
+    }
+  }
+
+  private static int countMines(int[][] map, List<Integer[]> neighbours) {
+    int mineCount = 0;
+    for (int i = 0; i < neighbours.size(); i++) {
+      int rowIndex = neighbours.get(i)[0];
+      int columnIndex = neighbours.get(i)[1];
+      if (map[rowIndex][columnIndex] == MINE) {
+        mineCount++;
+      }
+    }
+    return mineCount;
+  }
+
+  private static List<Integer[]> getNeighbours(int[][] map, int rowIndex, int columnIndex) {
+    List<Integer[]> neighbours = new ArrayList<>();
+
+    for (int i = -1; i <= 1; i++) {
+      for (int j = -1; j <= 1; j++) {
+        if (i == 0 && j == 0) {
+          continue;
+        }
+        int neighbourRowIndex = rowIndex + i;
+        int neighbourColumnIndex = columnIndex + j;
+        if (neighbourRowIndex >= 0 && neighbourRowIndex < map.length &&
+            neighbourColumnIndex >= 0 && neighbourColumnIndex < map[0].length) {
+          neighbours.add(new Integer[]{ rowIndex + i, columnIndex + j });
+        }
+      }
+    }
+    return neighbours;
   }
 
   private static void generateMines(int[][] map, int mineCount) {

@@ -8,7 +8,7 @@ public class Minesweeper {
   public static final int MINE = 9;
   public static final int MAP_WIDTH = 10;
   public static final int MAP_HEIGHT = 10;
-  public static final int MINE_COUNT = 10;
+  public static final int MINE_COUNT = 2;
 
   private static boolean[][] appearedMap = new boolean[MAP_HEIGHT][MAP_WIDTH];
   private static boolean isGameOver = false;
@@ -21,7 +21,7 @@ public class Minesweeper {
 
     while (!isGameOver) {
       int[] userInput = getUserInput();
-      appearField(userInput, appearedMap);
+      appearField(userInput, appearedMap, map);
       printMap(map);
       checkGameState(map, userInput);
     }
@@ -29,9 +29,17 @@ public class Minesweeper {
     System.exit(-1);
   }
 
-  private static void appearField(int[] userInput, boolean[][] appearedMap) {
+  private static void appearField(int[] userInput, boolean[][] appearedMap, int[][] map) {
     appearedMap[userInput[0]][userInput[1]] = true;
     appearedFieldsCount++;
+    if (map[userInput[0]][userInput[1]] == 0) {
+      List<int[]> neighbours = getNeighbours(map, userInput[0], userInput[1]);
+      for (int[] neighbour : neighbours) {
+        if (!appearedMap[neighbour[0]][neighbour[1]]) {
+          appearField(neighbour, appearedMap, map);
+        }
+      }
+    }
   }
 
   private static void checkGameState(int[][] map, int[] userInput) {
@@ -85,7 +93,7 @@ public class Minesweeper {
         if (map[rowIndex][columnIndex] == MINE) {
           continue;
         }
-        List<Integer[]> neighbours = getNeighbours(map, rowIndex, columnIndex);
+        List<int[]> neighbours = getNeighbours(map, rowIndex, columnIndex);
         int mineCount = countMines(map, neighbours);
         map[rowIndex][columnIndex] = mineCount;
       }
@@ -93,7 +101,7 @@ public class Minesweeper {
     }
   }
 
-  private static int countMines(int[][] map, List<Integer[]> neighbours) {
+  private static int countMines(int[][] map, List<int[]> neighbours) {
     int mineCount = 0;
     for (int i = 0; i < neighbours.size(); i++) {
       int rowIndex = neighbours.get(i)[0];
@@ -105,8 +113,8 @@ public class Minesweeper {
     return mineCount;
   }
 
-  private static List<Integer[]> getNeighbours(int[][] map, int rowIndex, int columnIndex) {
-    List<Integer[]> neighbours = new ArrayList<>();
+  private static List<int[]> getNeighbours(int[][] map, int rowIndex, int columnIndex) {
+    List<int[]> neighbours = new ArrayList<>();
 
     for (int i = -1; i <= 1; i++) {
       for (int j = -1; j <= 1; j++) {
@@ -117,7 +125,7 @@ public class Minesweeper {
         int neighbourColumnIndex = columnIndex + j;
         if (neighbourRowIndex >= 0 && neighbourRowIndex < map.length &&
             neighbourColumnIndex >= 0 && neighbourColumnIndex < map[0].length) {
-          neighbours.add(new Integer[]{ rowIndex + i, columnIndex + j });
+          neighbours.add(new int[]{ rowIndex + i, columnIndex + j });
         }
       }
     }

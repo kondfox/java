@@ -1,12 +1,14 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class Minesweeper {
 
-//    1 2 3 4 5 6
-//  A # # # # # #
-//  B # # # # # #
-//  C # # # # # #
-//  D # # 1 # # #
+  public static final List<String> ALPHABET = new ArrayList<>(Arrays.asList(
+          "A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"
+  ));
+  public static final int MINE = 9;
 
 
   public static void main(String[] args) {
@@ -20,12 +22,23 @@ public class Minesweeper {
   }
 
   private static void printMap(int[][] map) {
+    printHeader(map);
+
     for (int i = 0; i < map.length; i++) {
+      System.out.print(ALPHABET.get(i) + "\t");
       for (int j = 0; j < map[i].length; j++) {
         System.out.print(map[i][j] + " ");
       }
       System.out.println();
     }
+  }
+
+  private static void printHeader(int[][] map) {
+    System.out.print("\t");
+    for (int i = 1; i <= map[0].length; i++) {
+      System.out.print(i + " ");
+    }
+    System.out.println();
   }
 
   private static int[][] createMap(int mapWidth, int mapHeight) {
@@ -42,12 +55,11 @@ public class Minesweeper {
       int randomRowIndex = random.nextInt(map.length);
       int randomColumnIndex = random.nextInt(map[0].length);
 
-      if (map[randomRowIndex][randomColumnIndex] != 9) {
-        map[randomRowIndex][randomColumnIndex] = 9;
+      if (map[randomRowIndex][randomColumnIndex] != MINE) {
+        map[randomRowIndex][randomColumnIndex] = MINE;
         minesPlanted++;
       }
     }
-
   }
 
 }

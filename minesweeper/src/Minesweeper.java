@@ -8,7 +8,7 @@ public class Minesweeper {
   public static final int MINE = 9;
   public static final int MAP_WIDTH = 10;
   public static final int MAP_HEIGHT = 10;
-  public static final int MINE_COUNT = 2;
+  public static final int MINE_COUNT = 10;
 
   private static boolean[][] appearedMap = new boolean[MAP_HEIGHT][MAP_WIDTH];
   private static boolean isGameOver = false;
